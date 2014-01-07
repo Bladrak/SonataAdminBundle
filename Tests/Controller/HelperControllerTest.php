@@ -91,9 +91,6 @@ class HelperControllerTest extends \PHPUnit_Framework_TestCase
         $controller->getShortObjectDescriptionAction($request);
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testgetShortObjectDescriptionActionObjectDoesNotExist()
     {
         $admin = $this->getMock('Sonata\AdminBundle\Admin\AdminInterface');
@@ -107,7 +104,8 @@ class HelperControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request(array(
             'code'     => 'sonata.post.admin',
             'objectId' => 42,
-            'uniqid'   => 'asdasd123'
+            'uniqid'   => 'asdasd123',
+            '_format'  => 'html'
         ));
 
         $pool = new Pool($container, 'title', 'logo');
@@ -117,7 +115,9 @@ class HelperControllerTest extends \PHPUnit_Framework_TestCase
         $validator = $this->getMock('Symfony\Component\Validator\ValidatorInterface');
         $controller = new HelperController($twig, $pool, $helper, $validator);
 
-        $controller->getShortObjectDescriptionAction($request);
+        $response = $controller->getShortObjectDescriptionAction($request);
+
+        $this->assertEquals("", $response->getContent());
     }
 
     public function testgetShortObjectDescriptionActionObject()
